@@ -18,6 +18,14 @@ class Stopwatch extends Component {
     this.setState(initialState)
   }
 
+  onIncreasingMinutes = () => {
+    const {timeElapsedInSeconds} = this.state
+
+    if (timeElapsedInSeconds === 60) {
+      this.setState(prevState => ({timeInMinutes: prevState.timeInMinutes + 1}))
+    }
+  }
+
   incrementTimeElapsedInSeconds = () => {
     const {isTimerRunning} = this.state
 
@@ -27,23 +35,13 @@ class Stopwatch extends Component {
   }
 
   onStartTimer = () => {
-    const {isTimerRunning, timeElapsedInSeconds, timeInMinutes} = this.state
+    const {isTimerRunning} = this.state
 
     if (isTimerRunning) {
       this.intervalId = setInterval(this.incrementTimeElapsedInSeconds, 1000)
     }
 
-    this.setState(prevState => ({isTimerRunning: prevState.isTimerRunning}))
-
     this.onIncreasingMinutes()
-  }
-
-  onIncreasingMinutes = () => {
-    const {isTimerRunning, timeElapsedInSeconds, timeInMinutes} = this.state
-
-    if (timeElapsedInSeconds === 60) {
-      this.setState(prevState => ({timeInMinutes: prevState.timeInMinutes + 1}))
-    }
   }
 
   getTimeInStringFormat = () => {
@@ -64,8 +62,13 @@ class Stopwatch extends Component {
     this.onStartTimer()
   }
 
+  stopClock = () => {
+    this.clearTimerInterval()
+  }
+
   render() {
-    const {timeElapsedInSeconds, timeInMinutes} = this.state
+    const {isTimerRunning} = this.state
+    console.log(isTimerRunning)
 
     return (
       <div className="app-container">
@@ -89,10 +92,14 @@ class Stopwatch extends Component {
             >
               Start
             </button>
-            <button type="button" className="stop-btn">
+            <button type="button" className="stop-btn" onClick={this.stopClock}>
               Stop
             </button>
-            <button type="button" className="reset-btn">
+            <button
+              type="button"
+              className="reset-btn"
+              onClick={this.onResetTimer}
+            >
               Reset
             </button>
           </div>
